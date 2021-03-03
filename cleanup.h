@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-static inline _closep(int* fd) {
+static inline void _closep(int* fd) {
   if(*fd != -1) {
     int error = close(fd);
     if(error != 0) {
