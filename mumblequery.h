@@ -10,6 +10,7 @@ union mumble_version {
 
 struct mumble_query_reply {
   union mumble_version version;
+  uint64_t id;
   uint32_t users;
   uint32_t slots;
   uint32_t bandwidth;
