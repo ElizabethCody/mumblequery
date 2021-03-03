@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include <netent/in.h>
+#include <netinet/in.h>
 
 union mumble_version {
   uint8_t part[4];
