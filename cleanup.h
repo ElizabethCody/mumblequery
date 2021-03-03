@@ -3,9 +3,9 @@
 #include <stdio.h>
 #include <unistd.h>
 
-static inline _closep(int* sock) {
-  if(*sock != -1) {
-    int error = close(sock);
+static inline _closep(int* fd) {
+  if(*fd != -1) {
+    int error = close(fd);
     if(error != 0) {
       perror("_closep(): Failed to close");
     }
