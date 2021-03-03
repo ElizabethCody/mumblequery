@@ -15,5 +15,5 @@ struct mumble_query_reply {
   uint32_t bandwidth;
 } __attribute__(packed);
 
-int mumble_query(const struct sockaddr_in*, struct mumble_query_reply*);
+int mumble_query(const struct sockaddr_in*, uint64_t, struct mumble_query_reply*);
 int mumble_snversion(char*, size_t, union mumble_version);
