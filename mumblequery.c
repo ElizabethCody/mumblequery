@@ -60,8 +60,9 @@ int mumble_query(const struct sockaddr_in* address, uint64_t id,
   }
 
   // correct endianness
-  reply->users = be32toh(reply->users);
-  reply->slots = be32toh(reply->slots);
+  reply->id        = be64toh(reply->id);
+  reply->users     = be32toh(reply->users);
+  reply->slots     = be32toh(reply->slots);
   reply->bandwidth = be32toh(reply->bandwidth);
 
   // return zero for success.
