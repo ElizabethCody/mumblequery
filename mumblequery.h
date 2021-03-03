@@ -5,7 +5,7 @@
 #include <netent/in.h>
 
 union mumble_version {
-  uint8_t version[4];
+  uint8_t part[4];
 };
 
 struct mumble_query_reply {
