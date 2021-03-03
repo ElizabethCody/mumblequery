@@ -5,7 +5,7 @@
 
 static inline void _closep(int* fd) {
   if(*fd != -1) {
-    int error = close(fd);
+    int error = close(*fd);
     if(error != 0) {
       perror("_closep(): Failed to close");
     }
