@@ -65,6 +65,10 @@ int mumble_query(const struct sockaddr_in* address, uint64_t id,
   reply->slots     = be32toh(reply->slots);
   reply->bandwidth = be32toh(reply->bandwidth);
 
+  if(reply->id != id) {
+    return EIO;
+  }
+
   // return zero for success.
   return 0;
 }
