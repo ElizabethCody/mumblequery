@@ -16,11 +16,14 @@ int mumble_snversion(char* buffer, size_t size, union mumble_version version) {
 
 int mumble_query(struct sockaddr* addr, uint64_t id,
                  struct mumble_query_reply* reply) {
+  errno = EIO;
+
   // open a UDP socket to the server
   _cleanup_close_ int sock = socket(addr->sa_family, SOCK_DGRAM, 0);
 
   if(sock == -1) {
-    return errno;
+    // socket() sets errno
+    return -1;
   }
 
   struct timeval timeout = {
@@ -31,8 +34,9 @@ int mumble_query(struct sockaddr* addr, uint64_t id,
   // set read timeout
   int status = setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO,
                           &timeout, sizeof(timeout));
-  if(status < 0) {
-    return errno;
+  if(status == -1) {
+    // setsockopt() sets errno
+    return -1;
   }
 
   // prepare query
@@ -47,20 +51,18 @@ int mumble_query(struct sockaddr* addr, uint64_t id,
   // send query
   ssize_t sent = sendto(sock, &query, sizeof(query),
                         MSG_CONFIRM, addr, sizeof(*addr));
-  if(sent == -1) {
-    return errno;
-  } else if(sent != sizeof(query)) {
-    return EIO;
+  if(sent == -1 || sent != sizeof(query)) {
+    // sendto() *might have* set errno
+    return -1;
   }
 
   // read reply
   socklen_t len = 0;
   ssize_t recv = recvfrom(sock, reply, sizeof(*reply),
                           MSG_WAITALL, addr, &len);
-  if(recv == -1) {
-    return errno;
-  } else if(recv != sizeof(*reply)) {
-    return EIO;
+  if(recv == -1 || recv != sizeof(*reply)) {
+    // recvfrom() *might have* set errno
+    return -1;
   }
 
   // correct endianness
@@ -71,9 +73,10 @@ int mumble_query(struct sockaddr* addr, uint64_t id,
 
   // ensure packet id matches
   if(reply->id != id) {
-    return EIO;
+    return -1;
   }
 
-  // return zero for success.
+  // success.
+  errno = 0;
   return 0;
 }
